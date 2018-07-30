@@ -15,3 +15,11 @@ func TestTask(t *testing.T) {
 		assert.Empty(t, createdTask.State(), "Task should inited with empty state")
 	})
 }
+
+func TestTaskProgressParse(t *testing.T) {
+	const taskInfoString = `999,999 99%  999.99kB/s    0:00:59 (xfr#9, to-chk=999/9999)`
+	remain, total := getTaskProgress(progressMatcher.Extract(taskInfoString))
+
+	assert.Equal(t, remain, 999)
+	assert.Equal(t, total, 9999)
+}

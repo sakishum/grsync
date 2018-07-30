@@ -21,7 +21,7 @@ type State struct {
 	Remain   int     `json:"remain"`
 	Total    int     `json:"total"`
 	Speed    string  `json:"speed"`
-	Progress float32 `json:"progress"`
+	Progress float64 `json:"progress"`
 }
 
 // Log contains raw stderr and stdout outputs
@@ -68,19 +68,20 @@ func New(source, destination string, rsyncOptions rsync.Options) *Task {
 	}
 }
 
+var progressMatcher = newMatcher(`\(.+to-chk=(\d+.\d+)`)
+var speedMatcher = newMatcher(`(\d+\.\d+.{2}/s)`)
+
 func processStdout(task *Task, stdout io.Reader) {
 	const maxPercents = 100
 	// Extract data from string:
 	//         999,999 99%  999.99kB/s    0:00:59 (xfr#9, to-chk=999/9999)
-	progressMatcher := newMatcher(`\(.+to-chk=(\d+.\d+)`)
-	speedMatcher := newMatcher(`(\d+\.\d+.{2}/s)`)
 
 	scanner := bufio.NewScanner(stdout)
 	for scanner.Scan() {
 		logStr := scanner.Text()
 		if progressMatcher.Match(logStr) {
 			task.state.Remain, task.state.Total = getTaskProgress(progressMatcher.Extract(logStr))
-			task.state.Progress = float32((task.state.Total-task.state.Remain)/task.state.Total) * maxPercents
+			task.state.Progress = float64((task.state.Total-task.state.Remain)/task.state.Total) * maxPercents
 		}
 
 		if speedMatcher.Match(logStr) {
