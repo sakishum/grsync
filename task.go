@@ -64,6 +64,7 @@ func (t *Task) Run() error {
 func New(source, destination string, rsyncOptions rsync.Options) *Task {
 	return &Task{
 		rsync: rsync.New(source, destination, rsyncOptions),
+		state: &State{},
 	}
 }
 
