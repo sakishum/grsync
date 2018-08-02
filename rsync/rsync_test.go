@@ -256,21 +256,21 @@ func TestParseArguments(t *testing.T) {
 		args := getArguments(Options{
 			BlockSize: 1,
 		})
-		assert.Contains(t, args, "--block-size=1")
+		assert.ElementsMatch(t, args, []string{"--block-size", "1"})
 	})
 
 	t.Run("--rsh", func(t *testing.T) {
 		args := getArguments(Options{
 			Rsh: "test",
 		})
-		assert.Contains(t, args, "--rsh=test")
+		assert.Contains(t, args, "--rsh", "test")
 	})
 
 	t.Run("--rsync-programm", func(t *testing.T) {
 		args := getArguments(Options{
 			RsyncProgramm: "test",
 		})
-		assert.Contains(t, args, "--rsync-programm=test")
+		assert.Contains(t, args, "--rsync-programm", "test")
 	})
 
 	t.Run("--existing", func(t *testing.T) {
@@ -354,21 +354,21 @@ func TestParseArguments(t *testing.T) {
 		args := getArguments(Options{
 			MaxDelete: 1,
 		})
-		assert.Contains(t, args, "--max-delete=1")
+		assert.ElementsMatch(t, args, []string{"--max-delete", "1"})
 	})
 
 	t.Run("--max-size", func(t *testing.T) {
 		args := getArguments(Options{
 			MaxSize: 1,
 		})
-		assert.Contains(t, args, "--max-size=1")
+		assert.ElementsMatch(t, args, []string{"--max-size", "1"})
 	})
 
 	t.Run("--min-size", func(t *testing.T) {
 		args := getArguments(Options{
 			MinSize: 1,
 		})
-		assert.Contains(t, args, "--min-size=1")
+		assert.ElementsMatch(t, args, []string{"--min-size", "1"})
 	})
 
 	t.Run("--partial", func(t *testing.T) {
@@ -382,7 +382,7 @@ func TestParseArguments(t *testing.T) {
 		args := getArguments(Options{
 			PartialDir: "test",
 		})
-		assert.Contains(t, args, "--partial-dir=test")
+		assert.ElementsMatch(t, args, []string{"--partial-dir", "test"})
 	})
 
 	t.Run("--delay-updates", func(t *testing.T) {
@@ -410,14 +410,14 @@ func TestParseArguments(t *testing.T) {
 		args := getArguments(Options{
 			Timeout: 100,
 		})
-		assert.Contains(t, args, "--timeout=100")
+		assert.ElementsMatch(t, args, []string{"--timeout", "100"})
 	})
 
 	t.Run("--timeout", func(t *testing.T) {
 		args := getArguments(Options{
 			Contimeout: 100,
 		})
-		assert.Contains(t, args, "--contimeout=100")
+		assert.ElementsMatch(t, args, []string{"--contimeout", "100"})
 	})
 
 	t.Run("--ignore-times", func(t *testing.T) {
@@ -445,7 +445,7 @@ func TestParseArguments(t *testing.T) {
 		args := getArguments(Options{
 			TempDir: "test",
 		})
-		assert.Contains(t, args, "--temp-dir=test")
+		assert.Contains(t, args, "--temp-dir", "test")
 	})
 
 	t.Run("--fuzzy", func(t *testing.T) {
@@ -459,21 +459,21 @@ func TestParseArguments(t *testing.T) {
 		args := getArguments(Options{
 			CompareDest: "test",
 		})
-		assert.Contains(t, args, "--compare-dest=test")
+		assert.Contains(t, args, "--compare-dest", "test")
 	})
 
 	t.Run("--copy-dest=", func(t *testing.T) {
 		args := getArguments(Options{
 			CopyDest: "test",
 		})
-		assert.Contains(t, args, "--copy-dest=test")
+		assert.Contains(t, args, "--copy-dest", "test")
 	})
 
 	t.Run("--link-dest", func(t *testing.T) {
 		args := getArguments(Options{
 			LinkDest: "test",
 		})
-		assert.Contains(t, args, "--link-dest=test")
+		assert.Contains(t, args, "--link-dest", "test")
 	})
 
 	t.Run("--compress", func(t *testing.T) {
@@ -487,14 +487,14 @@ func TestParseArguments(t *testing.T) {
 		args := getArguments(Options{
 			CompressLevel: 3,
 		})
-		assert.Contains(t, args, "--compress-level=3")
+		assert.ElementsMatch(t, args, []string{"--compress-level", "3"})
 	})
 
 	t.Run("--skip-compress=", func(t *testing.T) {
 		args := getArguments(Options{
 			SkipCompress: []string{"1", "2"},
 		})
-		assert.Contains(t, args, "--skip-compress=1,2")
+		assert.ElementsMatch(t, args, []string{"--skip-compress", "1,2"})
 	})
 
 	t.Run("--cvs-exclude", func(t *testing.T) {

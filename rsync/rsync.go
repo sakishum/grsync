@@ -347,15 +347,15 @@ func getArguments(options Options) []string {
 	}
 
 	if options.BlockSize > 0 {
-		arguments = append(arguments, "--block-size="+strconv.Itoa(options.BlockSize))
+		arguments = append(arguments, "--block-size", strconv.Itoa(options.BlockSize))
 	}
 
 	if options.Rsh != "" {
-		arguments = append(arguments, "--rsh="+options.Rsh)
+		arguments = append(arguments, "--rsh", options.Rsh)
 	}
 
 	if options.RsyncProgramm != "" {
-		arguments = append(arguments, "--rsync-programm="+options.RsyncProgramm)
+		arguments = append(arguments, "--rsync-programm", options.RsyncProgramm)
 	}
 
 	if options.Existing {
@@ -403,15 +403,15 @@ func getArguments(options Options) []string {
 	}
 
 	if options.MaxDelete > 0 {
-		arguments = append(arguments, "--max-delete="+strconv.Itoa(options.MaxDelete))
+		arguments = append(arguments, "--max-delete", strconv.Itoa(options.MaxDelete))
 	}
 
 	if options.MaxSize > 0 {
-		arguments = append(arguments, "--max-size="+strconv.Itoa(options.MaxSize))
+		arguments = append(arguments, "--max-size", strconv.Itoa(options.MaxSize))
 	}
 
 	if options.MinSize > 0 {
-		arguments = append(arguments, "--min-size="+strconv.Itoa(options.MinSize))
+		arguments = append(arguments, "--min-size", strconv.Itoa(options.MinSize))
 	}
 
 	if options.Partial {
@@ -419,7 +419,7 @@ func getArguments(options Options) []string {
 	}
 
 	if options.PartialDir != "" {
-		arguments = append(arguments, "--partial-dir="+options.PartialDir)
+		arguments = append(arguments, "--partial-dir", options.PartialDir)
 	}
 
 	if options.DelayUpdates {
@@ -435,11 +435,11 @@ func getArguments(options Options) []string {
 	}
 
 	if options.Timeout > 0 {
-		arguments = append(arguments, "--timeout="+strconv.Itoa(options.Timeout))
+		arguments = append(arguments, "--timeout", strconv.Itoa(options.Timeout))
 	}
 
 	if options.Contimeout > 0 {
-		arguments = append(arguments, "--contimeout="+strconv.Itoa(options.Contimeout))
+		arguments = append(arguments, "--contimeout", strconv.Itoa(options.Contimeout))
 	}
 
 	if options.IgnoreTimes {
@@ -455,7 +455,7 @@ func getArguments(options Options) []string {
 	}
 
 	if options.TempDir != "" {
-		arguments = append(arguments, "--temp-dir="+options.TempDir)
+		arguments = append(arguments, "--temp-dir", options.TempDir)
 	}
 
 	if options.Fuzzy {
@@ -463,15 +463,15 @@ func getArguments(options Options) []string {
 	}
 
 	if options.CompareDest != "" {
-		arguments = append(arguments, "--compare-dest="+options.CompareDest)
+		arguments = append(arguments, "--compare-dest", options.CompareDest)
 	}
 
 	if options.CopyDest != "" {
-		arguments = append(arguments, "--copy-dest="+options.CopyDest)
+		arguments = append(arguments, "--copy-dest", options.CopyDest)
 	}
 
 	if options.LinkDest != "" {
-		arguments = append(arguments, "--link-dest="+options.LinkDest)
+		arguments = append(arguments, "--link-dest", options.LinkDest)
 	}
 
 	if options.Compress {
@@ -479,11 +479,11 @@ func getArguments(options Options) []string {
 	}
 
 	if options.CompressLevel > 0 {
-		arguments = append(arguments, "--compress-level="+strconv.Itoa(options.CompressLevel))
+		arguments = append(arguments, "--compress-level", strconv.Itoa(options.CompressLevel))
 	}
 
 	if len(options.SkipCompress) > 0 {
-		arguments = append(arguments, "--skip-compress="+strings.Join(options.SkipCompress, ","))
+		arguments = append(arguments, "--skip-compress", strings.Join(options.SkipCompress, ","))
 	}
 
 	if options.CVSExclude {
