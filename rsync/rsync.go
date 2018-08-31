@@ -197,7 +197,11 @@ func (r Rsync) Run() error {
 		}
 	}
 
-	return r.cmd.Run()
+	if err := r.cmd.Start(); err != nil {
+		return err
+	}
+
+	return r.cmd.Wait()
 }
 
 // New returns task with described options
