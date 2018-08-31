@@ -168,6 +168,8 @@ type Options struct {
 	HumanReadable bool
 	// Progress show progress during transfer
 	Progress bool
+	// Info
+	Info string
 
 	// ipv4
 	IPv4 bool
@@ -189,6 +191,12 @@ func (r Rsync) StderrPipe() (io.ReadCloser, error) {
 
 // Run start rsync task
 func (r Rsync) Run() error {
+	if !isExist(r.Destination) {
+		if err := createDir(r.Destination); err != nil {
+			return err
+		}
+	}
+
 	return r.cmd.Run()
 }
 
@@ -295,8 +303,6 @@ func getArguments(options Options) []string {
 	if options.XAttrs {
 		arguments = append(arguments, "--xattrs")
 	}
-
-	/////////
 
 	if options.Owner {
 		arguments = append(arguments, "--owner")
@@ -510,5 +516,22 @@ func getArguments(options Options) []string {
 		arguments = append(arguments, "--ipv6")
 	}
 
+	if options.Info != "" {
+		arguments = append(arguments, "--info", options.Info)
+	}
+
 	return arguments
+}
+
+func createDir(dir string) error {
+	cmd := exec.Command("mkdir", "-p", dir)
+	if err := cmd.Start(); err != nil {
+		return err
+	}
+	return cmd.Wait()
+}
+
+func isExist(p string) bool {
+	_, err := os.Stat(p)
+	return err == nil
 }

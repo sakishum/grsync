@@ -2,8 +2,10 @@ package grsync
 
 import (
 	"bufio"
+	"grsync/pkg/matcher"
 	"grsync/rsync"
 	"io"
+	"math"
 	"strconv"
 	"strings"
 )
@@ -13,7 +15,7 @@ type Task struct {
 	rsync *rsync.Rsync
 
 	state *State
-	log   Log
+	log   *Log
 }
 
 // State contains information about rsync process
@@ -37,7 +39,10 @@ func (t Task) State() State {
 
 // Log return structure which contains raw stderr and stdout outputs
 func (t Task) Log() Log {
-	return t.log
+	return Log{
+		Stderr: t.log.Stderr,
+		Stdout: t.log.Stdout,
+	}
 }
 
 // Run starts rsync process with options
@@ -60,47 +65,52 @@ func (t *Task) Run() error {
 	return t.rsync.Run()
 }
 
-// New returns new rsync task
-func New(source, destination string, rsyncOptions rsync.Options) *Task {
+// NewTask returns new rsync task
+func NewTask(source, destination string, rsyncOptions rsync.Options) *Task {
 	// Force set required options
-	rsyncOptions.Stats = true
-	rsyncOptions.Progress = true
 	rsyncOptions.HumanReadable = true
+	rsyncOptions.Partial = true
+	rsyncOptions.Progress = true
+	rsyncOptions.Archive = true
 
 	return &Task{
 		rsync: rsync.New(source, destination, rsyncOptions),
 		state: &State{},
+		log:   &Log{},
 	}
 }
 
-var progressMatcher = newMatcher(`\(.+to-chk=(\d+.\d+)`)
-var speedMatcher = newMatcher(`(\d+\.\d+.{2}/s)`)
-
 func processStdout(task *Task, stdout io.Reader) {
-	const maxPercents = 100
-	// Extract data from string:
-	//         999,999 99%  999.99kB/s    0:00:59 (xfr#9, to-chk=999/9999)
+	const maxPercents = float64(100)
+	const minDivider = 1
 
+	progressMatcher := matcher.New(`\(.+-chk=(\d+.\d+)`)
+	speedMatcher := matcher.New(`(\d+\.\d+.{2}\/s)`)
+
+	// Extract data from strings:
+	//         999,999 99%  999.99kB/s    0:00:59 (xfr#9, to-chk=999/9999)
 	scanner := bufio.NewScanner(stdout)
 	for scanner.Scan() {
 		logStr := scanner.Text()
 		if progressMatcher.Match(logStr) {
 			task.state.Remain, task.state.Total = getTaskProgress(progressMatcher.Extract(logStr))
-			task.state.Progress = float64((task.state.Total-task.state.Remain)/task.state.Total) * maxPercents
+
+			copiedCount := float64(task.state.Total - task.state.Remain)
+			task.state.Progress = copiedCount / math.Max(float64(task.state.Total), float64(minDivider)) * maxPercents
 		}
 
 		if speedMatcher.Match(logStr) {
-			task.state.Speed = speedMatcher.Extract(logStr)
+			task.state.Speed = getTaskSpeed(speedMatcher.ExtractAllStringSubmatch(logStr, 2))
 		}
 
-		task.log.Stdout += logStr
+		task.log.Stdout += logStr + "\n"
 	}
 }
 
 func processStderr(task *Task, stderr io.Reader) {
 	scanner := bufio.NewScanner(stderr)
 	for scanner.Scan() {
-		task.log.Stderr += scanner.Text()
+		task.log.Stderr += scanner.Text() + "\n"
 	}
 }
 
@@ -121,4 +131,12 @@ func getTaskProgress(remTotalString string) (int, int) {
 	total, _ := strconv.Atoi(info[indexTotal])
 
 	return remain, total
+}
+
+func getTaskSpeed(data [][]string) string {
+	if len(data) < 2 || len(data[1]) < 2 {
+		return ""
+	}
+
+	return data[1][1]
 }
