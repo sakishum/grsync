@@ -14,7 +14,6 @@ package main
 import (
     "fmt"
     "grsync"
-    "grsync/rsync"
     "time"
 )
 
@@ -22,7 +21,7 @@ func main() {
     task := grsync.NewTask(
         "username@server.com:/source/folder",
         "/home/user/destination",
-        rsync.Options{},
+        grsync.RsyncOptions{},
     )
 
     go func() {
