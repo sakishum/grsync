@@ -1,7 +1,7 @@
 # grsync — golang rsync wrapper
 
 [![Build Status](https://travis-ci.org/zloylos/grsync.svg)](https://travis-ci.org/zloylos/grsync)
-[![codecov](https://codecov.io/gh/gin-gonic/gin/branch/master/graph/badge.svg)](https://codecov.io/gh/gin-gonic/gin)
+[![codecov](https://codecov.io/gh/zloylos/grsync/branch/master/graph/badge.svg)](https://codecov.io/gh/zloylos/grsync)
 [![GoDoc](https://godoc.org/github.com/zloylos/grsync?status.svg)](https://godoc.org/github.com/zloylos/grsync)
 
 Repository contains some helpful tools:
