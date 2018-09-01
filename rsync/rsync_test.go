@@ -525,6 +525,14 @@ func TestParseArguments(t *testing.T) {
 		assert.Contains(t, args, "--progress")
 	})
 
+	t.Run("--info", func(t *testing.T) {
+		args := getArguments(Options{
+			Info: "progress2",
+		})
+		assert.Contains(t, args, "--info")
+		assert.Contains(t, args, "progress2")
+	})
+
 	t.Run("--ipv4", func(t *testing.T) {
 		args := getArguments(Options{
 			IPv4: true,
