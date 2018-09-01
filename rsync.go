@@ -536,6 +536,6 @@ func createDir(dir string) error {
 }
 
 func isExist(p string) bool {
-	_, err := os.Stat(p)
-	return err == nil
+	stat, err := os.Stat(p)
+	return os.IsExist(err) && stat.IsDir()
 }
