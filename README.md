@@ -3,8 +3,8 @@
 [![Build Status](https://travis-ci.org/zloylos/grsync.svg)](https://travis-ci.org/zloylos/grsync) [![GoDoc](https://godoc.org/github.com/zloylos/grsync?status.svg)](https://godoc.org/github.com/zloylos/grsync)
 
 Repository contains some helpful tools:
-- raw rsync wrapper https://godoc.org/github.com/zloylos/grsync/rsync
-- rsync task — wrapper which provide important information about rsync task: progress, remain items, total items and speed — https://godoc.org/github.com/zloylos/grsyn
+- raw rsync wrapper
+- rsync task — wrapper which provide important information about rsync task: progress, remain items, total items and speed
 
 ## Task wrapper usage
 

@@ -2,8 +2,6 @@ package grsync
 
 import (
 	"bufio"
-	"grsync/pkg/matcher"
-	"grsync/rsync"
 	"io"
 	"math"
 	"strconv"
@@ -12,7 +10,7 @@ import (
 
 // Task is high-level API under rsync
 type Task struct {
-	rsync *rsync.Rsync
+	rsync *Rsync
 
 	state *State
 	log   *Log
@@ -66,7 +64,7 @@ func (t *Task) Run() error {
 }
 
 // NewTask returns new rsync task
-func NewTask(source, destination string, rsyncOptions rsync.Options) *Task {
+func NewTask(source, destination string, rsyncOptions RsyncOptions) *Task {
 	// Force set required options
 	rsyncOptions.HumanReadable = true
 	rsyncOptions.Partial = true
@@ -74,7 +72,7 @@ func NewTask(source, destination string, rsyncOptions rsync.Options) *Task {
 	rsyncOptions.Archive = true
 
 	return &Task{
-		rsync: rsync.New(source, destination, rsyncOptions),
+		rsync: NewRsync(source, destination, rsyncOptions),
 		state: &State{},
 		log:   &Log{},
 	}
@@ -84,8 +82,8 @@ func processStdout(task *Task, stdout io.Reader) {
 	const maxPercents = float64(100)
 	const minDivider = 1
 
-	progressMatcher := matcher.New(`\(.+-chk=(\d+.\d+)`)
-	speedMatcher := matcher.New(`(\d+\.\d+.{2}\/s)`)
+	progressMatcher := newMatcher(`\(.+-chk=(\d+.\d+)`)
+	speedMatcher := newMatcher(`(\d+\.\d+.{2}\/s)`)
 
 	// Extract data from strings:
 	//         999,999 99%  999.99kB/s    0:00:59 (xfr#9, to-chk=999/9999)

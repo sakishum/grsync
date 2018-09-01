@@ -1,4 +1,4 @@
-package rsync
+package grsync
 
 import (
 	"io"
@@ -17,7 +17,7 @@ type Rsync struct {
 }
 
 // Options for rsync
-type Options struct {
+type RsyncOptions struct {
 	// Verbose increase verbosity
 	Verbose bool
 	// Quet suppress non-error messages
@@ -205,7 +205,7 @@ func (r Rsync) Run() error {
 }
 
 // New returns task with described options
-func New(source, destination string, options Options) *Rsync {
+func NewRsync(source, destination string, options RsyncOptions) *Rsync {
 	arguments := append(getArguments(options), source, destination)
 	return &Rsync{
 		Source:      source,
@@ -214,7 +214,7 @@ func New(source, destination string, options Options) *Rsync {
 	}
 }
 
-func getArguments(options Options) []string {
+func getArguments(options RsyncOptions) []string {
 	arguments := []string{}
 	if options.Verbose {
 		arguments = append(arguments, "--verbose")

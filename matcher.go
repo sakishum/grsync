@@ -1,18 +1,18 @@
-package matcher
+package grsync
 
 import (
 	"regexp"
 )
 
-type Matcher struct {
+type matcher struct {
 	regExp *regexp.Regexp
 }
 
-func (m Matcher) Match(data string) bool {
+func (m matcher) Match(data string) bool {
 	return m.regExp.Match([]byte(data))
 }
 
-func (m Matcher) Extract(data string) string {
+func (m matcher) Extract(data string) string {
 	const submatchCount = 1
 	matches := m.regExp.FindAllStringSubmatch(data, submatchCount)
 	if len(matches) == 0 || len(matches[0]) < 2 {
@@ -22,12 +22,12 @@ func (m Matcher) Extract(data string) string {
 	return matches[0][1]
 }
 
-func (m Matcher) ExtractAllStringSubmatch(data string, submatchCount int) [][]string {
+func (m matcher) ExtractAllStringSubmatch(data string, submatchCount int) [][]string {
 	return m.regExp.FindAllStringSubmatch(data, submatchCount)
 }
 
-func New(regExpString string) *Matcher {
-	return &Matcher{
+func newMatcher(regExpString string) *matcher {
+	return &matcher{
 		regExp: regexp.MustCompile(regExpString),
 	}
 }
