@@ -10,4 +10,5 @@ go:
   - tip
 
 script:
+  - go get github.com/stretchr/testify
   - go test -v -race $(go list ./... | grep -v vendor)
