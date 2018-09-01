@@ -16,7 +16,7 @@ type Rsync struct {
 	cmd *exec.Cmd
 }
 
-// Options for rsync
+// RsyncOptions for rsync
 type RsyncOptions struct {
 	// Verbose increase verbosity
 	Verbose bool
@@ -204,7 +204,7 @@ func (r Rsync) Run() error {
 	return r.cmd.Wait()
 }
 
-// New returns task with described options
+// NewRsync returns task with described options
 func NewRsync(source, destination string, options RsyncOptions) *Rsync {
 	arguments := append(getArguments(options), source, destination)
 	return &Rsync{
