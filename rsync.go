@@ -170,6 +170,8 @@ type RsyncOptions struct {
 	Progress bool
 	// Info
 	Info string
+	// limit I/O bandwidth using
+	BwLimit int
 
 	// ipv4
 	IPv4 bool
@@ -522,6 +524,10 @@ func getArguments(options RsyncOptions) []string {
 
 	if options.Info != "" {
 		arguments = append(arguments, "--info", options.Info)
+	}
+
+	if options.BwLimit > 0 {
+		arguments = append(arguments, "--bwlimit", strconv.Itoa(options.BwLimit))
 	}
 
 	return arguments
