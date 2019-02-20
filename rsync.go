@@ -12,7 +12,6 @@ import (
 type Rsync struct {
 	Source      string
 	Destination string
-
 	cmd *exec.Cmd
 }
 
@@ -170,7 +169,7 @@ type RsyncOptions struct {
 	Progress bool
 	// Info
 	Info string
-	// limit I/O bandwidth using
+	// Limit I/O bandwidth using
 	BwLimit int
 
 	// ipv4
@@ -193,11 +192,11 @@ func (r Rsync) StderrPipe() (io.ReadCloser, error) {
 
 // Run start rsync task
 func (r Rsync) Run() error {
-	if !isExist(r.Destination) {
+	/*if !isExist(r.Destination) {  // not good for remote dictionary
 		if err := createDir(r.Destination); err != nil {
 			return err
 		}
-	}
+	}*/
 
 	if err := r.cmd.Start(); err != nil {
 		return err
