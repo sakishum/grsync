@@ -3,8 +3,9 @@ package grsync
 import (
 	"bufio"
 	"io"
-    //"fmt"
-	"math"
+    "fmt"
+	//"math"
+	//"bytes"
 	"strconv"
 	"strings"
 )
@@ -48,12 +49,14 @@ func (t Task) Log() Log {
 func (t *Task) Run() error {
 	stderr, err := t.rsync.StderrPipe()
 	if err != nil {
+		fmt.Println("stderr err:", err)
 		return err
 	}
 	defer stderr.Close()
 
 	stdout, err := t.rsync.StdoutPipe()
 	if err != nil {
+		fmt.Println("stdout err:", err)
 		return err
 	}
 	defer stdout.Close()
@@ -83,24 +86,31 @@ func processStdout(task *Task, stdout io.Reader) {
 	const maxPercents = float64(100)
 	const minDivider = 1
 
-	progressMatcher := newMatcher(`\(.+-chk=(\d+.\d+)`)
+	//progressMatcher := newMatcher(`\(.+-chk=(\d+.\d+)`)
+	progressMatcher := newMatcher(`\d+(?:\.\d+)?%`)
 	speedMatcher := newMatcher(`(\d+\.\d+.{2}\/s)`)
 
 	// Extract data from strings:
 	//         999,999 99%  999.99kB/s    0:00:59 (xfr#9, to-chk=999/9999)
 	scanner := bufio.NewScanner(stdout)
+    scanner.Split(bufio.ScanWords)
+
 	for scanner.Scan() {
 		logStr := scanner.Text()
-        //fmt.Println("logStr", logStr)
+        //fmt.Println("logStr == >", logStr)
 		if progressMatcher.Match(logStr) {
-			task.state.Remain, task.state.Total = getTaskProgress(progressMatcher.Extract(logStr))
-
-			copiedCount := float64(task.state.Total - task.state.Remain)
-			task.state.Progress = copiedCount / math.Max(float64(task.state.Total), float64(minDivider)) * maxPercents
+			//fmt.Println("progressMatcher Enter. persentage:", strings.Replace(logStr, "%", "", -1))
+			//task.state.Remain, task.state.Total = getTaskProgress(progressMatcher.Extract(logStr))
+			//copiedCount := float64(task.state.Total - task.state.Remain)
+			//task.state.Progress = copiedCount / math.Max(float64(task.state.Total), float64(minDivider)) * maxPercents
+			persentage, err := strconv.Atoi(strings.Replace(logStr, "%", "", -1))
+			if err == nil {
+				task.state.Progress = float64(persentage)
+			}
 		}
 
 		if speedMatcher.Match(logStr) {
-			task.state.Speed = getTaskSpeed(speedMatcher.ExtractAllStringSubmatch(logStr, 2))
+			task.state.Speed = logStr //etTaskSpeed(speedMatcher.ExtractAllStringSubmatch(logStr, 2))
 		}
 
 		task.log.Stdout += logStr + "\n"
