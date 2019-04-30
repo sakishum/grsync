@@ -266,11 +266,11 @@ func TestParseArguments(t *testing.T) {
 		assert.Contains(t, args, "--rsh", "test")
 	})
 
-	t.Run("--rsync-programm", func(t *testing.T) {
+	t.Run("--rsync-path", func(t *testing.T) {
 		args := getArguments(RsyncOptions{
 			RsyncProgramm: "test",
 		})
-		assert.Contains(t, args, "--rsync-programm", "test")
+		assert.Contains(t, args, "--rsync-path", "test")
 	})
 
 	t.Run("--existing", func(t *testing.T) {
